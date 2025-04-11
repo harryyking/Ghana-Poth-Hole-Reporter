@@ -20,16 +20,24 @@ export async function POST(request: Request) {
   if (!signature) {
     return NextResponse.json({ error: 'No signature provided' }, { status: 401 });
   }
-  
 
-  const hash = crypto
-    .createHmac('sha512', secret)
-    .update(rawBody)
-    .digest('hex');
+  const hash = crypto.createHmac('sha512', secret).update(rawBody).digest('hex');
 
   if (hash === signature) {
     try {
       const event = JSON.parse(rawBody.toString());
+
+      // Idempotency check
+      const existingEvent = await db.processedEvent.findUnique({
+        where: { eventId: event.id }, // Assuming event.id is unique
+      });
+
+      if (existingEvent) {
+        console.log('Duplicate event received:', event.id);
+        return new NextResponse('Duplicate event', { status: 200 }); // Or 202
+      }
+
+      await db.processedEvent.create({ data: { eventId: event.id } });
 
       switch (event.event) {
         case 'charge.success':
@@ -38,7 +46,6 @@ export async function POST(request: Request) {
             const userId = metadata?.userId as string | undefined;
 
             if (userId) {
-              // Fetch or create the user if needed
               const user = await db.user.findUnique({ where: { id: userId } });
               if (user) {
                 const existingSubscription = await db.subscription.findFirst({
@@ -77,13 +84,10 @@ export async function POST(request: Request) {
           }
           break;
         case 'subscription.create':
-          // This event is triggered when a subscription is created (often via API).
-          // You might not need to do much here if you handle creation on charge.success.
           console.log('New subscription created on Paystack:', event.data);
           break;
         case 'subscription.payment_failed':
           console.log('Subscription payment failed:', event.data);
-          // Update subscription status in your database
           if (event.data.subscription_id) {
             await db.subscription.update({
               where: { paystackSubscriptionId: event.data.subscription_id },

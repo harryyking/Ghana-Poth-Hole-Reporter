@@ -39,26 +39,27 @@ const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
             userId: userId,
             subscriptionPlan: planName,
           },
-          userId: userId, // Send userId in the body
+          userId: userId,
         }),
       });
 
       if (!response.ok) {
         const data = await response.json();
-        setError(data.error || 'Failed to initialize payment');
-        return;
+        const errorMessage = data.error || 'Failed to initialize payment. Please try again.';
+        setError(errorMessage);
+        return; // Important: Stop further processing
       }
 
-      const data = await response.json(); // Parse the JSON response
+      const data = await response.json();
 
       if (data.authorization_url) {
-        window.location.href = data.authorization_url; // Redirect to Paystack's checkout page
+        window.location.href = data.authorization_url;
       } else {
-        setError('Authorization URL not found in the response.');
+        setError('Authorization URL not found in response. Please try again.');
       }
     } catch (err: any) {
       console.error('Error initiating subscription:', err);
-      setError('Failed to initiate payment');
+      setError('Failed to initiate payment. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -67,7 +68,7 @@ const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
   return (
     <div>
       <h3>{planName}</h3>
-      <p>Amount: {planAmount / 100} NGN</p>
+      <p>Amount: {(planAmount / 100).toFixed(2)} NGN</p>
       <Button onClick={handleSubscribe} disabled={loading}>
         {loading ? 'Processing...' : 'Pay Now'}
       </Button>
