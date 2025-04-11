@@ -14,21 +14,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id             String    @id @default(cuid())
-  email          String    @unique
-  password       String
-  name           String?
-  emailVerified  DateTime?
-  image          String?
-  accounts       Account[]
-  sessions       Session[]
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id            String         @id @default(cuid())
+  email         String         @unique
+  password      String
+  name          String?
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  Subscription  Subscription[]
 
   @@map("users")
-  Subscription Subscription[]
 }
 
 model Account {
@@ -72,23 +71,22 @@ model VerificationToken {
   @@map("verificationtokens")
 }
 
-
 model Subscription {
-  id              String    @id @default(cuid())
-  userId          String
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  paystackSubscriptionId String? @unique // Paystack's subscription ID
-  paystackPlanId       String? // Paystack's plan ID
-  status            String    @default("active") // e.g., "active", "inactive", "cancelled"
-  startDate         DateTime?
-  endDate           DateTime?
-  nextPaymentDate   DateTime?
-  amount            Int?      // Amount in kobo
-  interval          String?   // 'daily', 'weekly', 'monthly', etc.
-  currency          String?
-  transactionReference String? // Last successful transaction reference
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  id                     String    @id @default(cuid())
+  userId                 String
+  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paystackSubscriptionId String?   @unique // Paystack's subscription ID
+  paystackPlanId         String? // Paystack's plan ID
+  status                 String    @default("active") // e.g., "active", "inactive", "cancelled"
+  startDate              DateTime?
+  endDate                DateTime?
+  nextPaymentDate        DateTime?
+  amount                 Int? // Amount in kobo
+  interval               String? // 'daily', 'weekly', 'monthly', etc.
+  currency               String?
+  transactionReference   String? // Last successful transaction reference
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
 
   @@index([userId])
   @@map("subscriptions")

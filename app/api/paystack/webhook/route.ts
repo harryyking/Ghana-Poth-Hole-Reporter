@@ -20,6 +20,7 @@ export async function POST(request: Request) {
   if (!signature) {
     return NextResponse.json({ error: 'No signature provided' }, { status: 401 });
   }
+  
 
   const hash = crypto
     .createHmac('sha512', secret)
