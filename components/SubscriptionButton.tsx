@@ -49,8 +49,13 @@ const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
         return;
       }
 
-      const authorizationUrl = await response.text();
-      window.location.href = authorizationUrl;
+      const data = await response.json(); // Parse the JSON response
+
+      if (data.authorization_url) {
+        window.location.href = data.authorization_url; // Redirect to Paystack's checkout page
+      } else {
+        setError('Authorization URL not found in the response.');
+      }
     } catch (err: any) {
       console.error('Error initiating subscription:', err);
       setError('Failed to initiate payment');
@@ -64,7 +69,7 @@ const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
       <h3>{planName}</h3>
       <p>Amount: {planAmount / 100} NGN</p>
       <Button onClick={handleSubscribe} disabled={loading}>
-        {loading ? 'Subscribe Now': 'Pay Now'}
+        {loading ? 'Processing...' : 'Pay Now'}
       </Button>
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
     </div>
