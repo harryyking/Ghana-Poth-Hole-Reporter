@@ -5,9 +5,9 @@ const page = () => {
   // Hardcoded user and subscription information for demonstration
   const userEmail = 'testuser@example.com';
   const userId = 'user-123';
-  const planName = 'Premium Plan';
+  const planName = 'Basic';
   const planAmount = 5000; // Amount in kobo (e.g., 5000 kobo = 50 NGN)
-  const planCode = 'PREMIUM_PLAN_CODE';
+  const planCode = 'PLN_o1h2io6q0pxg36t';
 
   // Scenario: User is upgrading their account to a premium subscription
   return (
