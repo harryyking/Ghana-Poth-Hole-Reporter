@@ -1,20 +1,10 @@
 import Paystack from 'paystack-node';
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-
-const paystack = new Paystack(process.env.PAYSTACK_SECRET_KEY!);
-
-interface InitializeSubscriptionPayload {
-  email: string;
-  amount: number;
-  plan?: string;
-  metadata?: Record<string, any>;
-  userId: string;
-}
 
 export async function POST(request: Request) {
   try {
-    const body: InitializeSubscriptionPayload = await request.json();
+    const paystack = new Paystack(process.env.PAYSTACK_SECRET_KEY!); // Correct instantiation
+    const body = await request.json();
     const { email, amount, plan, metadata, userId } = body;
     const planCode = "PLN_o1h2io6q0pxg36t";
 
@@ -28,14 +18,14 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ authorization_url: response.data.authorization_url });
   } catch (error: any) {
-    console.error('Paystack API error:', error); // Log the error on your server
+    console.error('Paystack API error:', error);
 
-    let errorMessage = 'Failed to initialize payment. Please try againn.';
+    let errorMessage = 'Failed to initialize payment. Please try again.';
 
     if (error.response && error.response.data && error.response.data.message) {
-      errorMessage = error.response.data.message; // Use Paystack's error message if available
+      errorMessage = error.response.data.message;
     }
 
-    return NextResponse.json({ error: errorMessage }, { status: 500 }); // Return 500 for server errors
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
