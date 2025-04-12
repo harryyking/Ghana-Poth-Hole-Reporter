@@ -30,7 +30,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('Paystack API error:', error); // Log the error on your server
 
-    let errorMessage = 'Failed to initialize payment. Please try again.';
+    let errorMessage = 'Failed to initialize payment. Please try againn.';
 
     if (error.response && error.response.data && error.response.data.message) {
       errorMessage = error.response.data.message; // Use Paystack's error message if available
