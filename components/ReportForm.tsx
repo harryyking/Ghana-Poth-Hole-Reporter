@@ -216,7 +216,6 @@ const ReportDialog: React.FC<ReportDialogProps> = ({ isOpen, onClose, onSubmitSu
                 {form.watch("photoUrl") && (
                   <p className="text-sm text-green-600">Image uploaded: <a href={form.watch("photoUrl")!} target="_blank" rel="noopener noreferrer" className="underline">View</a></p>
                 )}
-                <FormDescription>Max 5MB, JPG/PNG/GIF.</FormDescription>
                 <FormMessage>{form.formState.errors.photoUrl?.message}</FormMessage>
               </div>
             </div>
