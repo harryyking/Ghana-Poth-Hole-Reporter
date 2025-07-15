@@ -1,0 +1,50 @@
+# .github/workflows/hotspot-analysis.yml
+name: Hotspot Analysis Cron Job
+
+on:
+  schedule:
+    # Runs at 00:00 UTC every day
+    # You can adjust the cron schedule as needed:
+    # For example, to run every Monday at 3 AM UTC: '0 3 * * MON'
+    # To run every 6 hours: '0 */6 * * *'
+    - cron: '0 0 * * *' 
+  workflow_dispatch: # Allows you to manually trigger the workflow from GitHub UI
+
+jobs:
+  trigger-hotspot-analysis-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10 # Set a timeout for the job
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Trigger Hotspot Analysis API Endpoint
+      # Ensure your deployed Next.js app's URL is available as a GitHub Secret
+      # e.g., NEXT_APP_BASE_URL: https://your-app-name.vercel.app
+      env:
+        NEXT_APP_BASE_URL: ${{ secrets.NEXT_APP_BASE_URL }}
+        CRON_JOB_SECRET: ${{ secrets.CRON_JOB_SECRET }} # Pass the cron secret from GitHub Secrets
+      run: |
+        if [ -z "$NEXT_APP_BASE_URL" ]; then
+          echo "Error: NEXT_APP_BASE_URL secret is not set."
+          exit 1
+        fi
+        if [ -z "$CRON_JOB_SECRET" ]; then
+          echo "Error: CRON_JOB_SECRET secret is not set."
+          exit 1
+        fi
+
+        # Construct the URL for your API endpoint
+        # Assuming your route is at /api/hotspot-analysis as per the provided code
+        API_URL="${NEXT_APP_BASE_URL}/api/hotspot-analysis" 
+        
+        echo "Attempting to trigger: $API_URL"
+
+        # Make the POST request to your API endpoint with the custom header
+        curl -X POST \
+             -H "Content-Type: application/json" \
+             -H "x-cron-secret: ${CRON_JOB_SECRET}" \
+             -d "{}" \
+             --fail-with-body \
+             "$API_URL"

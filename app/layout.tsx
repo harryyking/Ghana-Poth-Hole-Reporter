@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { getSEOTags } from "@/lib/seo";
+// app/layout.tsx
+import './globals.css';
+import type { Metadata } from 'next';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 
-const brandFont = Inter({subsets: ["latin"]})
+const inter = Plus_Jakarta_Sans({ subsets: ['latin'], weight: ['200', '300', '400', '600']});
 
-export const metadata = getSEOTags({
-  title: "HK7",
-  description: "Boilerplate for African Devs",
-});
+export const metadata: Metadata = {
+  title: 'Ghana Infrastructure Reporter',
+  description: 'Report infrastructure problems in Ghana',
+};
 
 export default function RootLayout({
   children,
@@ -17,10 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={brandFont.className}
-      >
-        {children}
+      <body className={inter.className}>
+          {children}
+   
       </body>
     </html>
   );
