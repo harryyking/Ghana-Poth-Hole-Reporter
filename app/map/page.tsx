@@ -14,7 +14,7 @@ const Map = dynamic(() => import('@/components/Map'), {
 
 const Page = () => {
   return (
-    <div className='min-h-screen'>
+    <div>
       {/* SessionProvider wraps the components that need session access */}
       <SessionProvider>
         {/* Render the dynamically imported Map component */}

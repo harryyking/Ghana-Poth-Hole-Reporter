@@ -209,15 +209,15 @@ const Map: React.FC = () => {
     };
 
     return (
-        <div className="w-full overflow-hidden relative">
+        <div className=" w-full h-screen overflow-hidden relative">
             {/* The div that MapTiler SDK will use to render the map */}
-            <div ref={mapContainer} className="map w-full h-full" />
+            <div ref={mapContainer} className="absolute w-full h-full" />
 
             {/* Sign In Button on the map */}
             {!isAuthenticated && (
-                <div className="absolute top-4 right-4 z-10">
-                    <Button onClick={() => setIsSignInDialogOpen(true)} className=" bg-white shadow-md">
-                        <LogIn className="mr-2 h-4 w-4" /> Sign In
+                <div className="absolute top-4 left-4 z-10">
+                    <Button onClick={() => setIsSignInDialogOpen(true)} variant={"secondary"} className="shadow-md">
+                         Sign In
                     </Button>
                 </div>
             )}

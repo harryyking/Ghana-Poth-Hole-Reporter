@@ -138,7 +138,3 @@
   top: 10px;
   left: 10px;
 }
-
-.mapboxgl-ctrl-group {
-  z-index: 100 !important;
-}
