@@ -201,7 +201,7 @@ const ReportDialog: React.FC<ReportDialogProps> = ({ isOpen, onClose, onSubmitSu
 
             {/* Photo Upload Field (using Uploadthing) */}
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="photo-upload" className="text-right">Photo (Optional)</Label>
+              <Label htmlFor="photo-upload" className="text-right">Photo</Label>
               <div className="col-span-3 flex flex-col gap-2">
                 <UploadButton
                   endpoint="problemUploader" // This needs to match an endpoint defined in your Uploadthing config
